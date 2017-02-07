@@ -7,9 +7,12 @@ Program has minor tweaks, such as not clearing out each 16th line.  Every line i
 
 # Compiling Instructions
 Must be using DevKitPro r29
+
 Go in "src" folder and run "Make"
+
 elf2rpl.exe is offered, if compiling with linux, you must build elf2rpl yourself
 
 # Credits
 rw-r-r_0644 for original code
+
 brienj for RPX code using aliaspider's easy rpx code
