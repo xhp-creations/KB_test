@@ -12,14 +12,6 @@
 
 static int pline = 0;
 
-struct key_state {
-	unsigned char ch;
-	unsigned char scancode;
-	unsigned int state; //1=press; 0=release; 3=keep pressing
-	char unknown[4]; //?
-	unsigned short UTF16;
-};
-
 void flipBuffers()
 {
 	//Grab the buffer size for each screen (TV and gamepad)
@@ -78,22 +70,22 @@ void plog(char* txt) { //print log line to screen
 	pline++;
 }
 
-void kb_connection_callback(unsigned char *ch) {
+void kb_connection_callback(KBDKeyEvent *key) {
 	char buf3[255];
-	__os_snprintf(buf3,255,"kb connected at channel %d",*ch);
+	__os_snprintf(buf3,255,"kb connected at channel %d",key->channel);
 	plog(buf3);
 }
 
-void kb_disconnection_callback(unsigned char *ch) {
+void kb_disconnection_callback(KBDKeyEvent *key) {
 	char buf4[255];
-	__os_snprintf(buf4,255,"kb disconnected at channel %d",*ch);
+	__os_snprintf(buf4,255,"kb disconnected at channel %d",key->channel);
 	plog(buf4);
 }
 
-void kb_key_callback(struct key_state *key) {
-	if(key->state==1) {
-		char buf5[255];
-		__os_snprintf(buf5,255,"kpress(%d) scode:%02x char: %c",key->ch, key->scancode, (char)key->UTF16);
+void kb_key_callback(KBDKeyEvent *key) {
+	if(key->state>0) {
+		char buf5[255]; // ch = keyboard channel, state = key state, mod = key modifier, scode = scancode, char = printed char, uc = unicode value
+		__os_snprintf(buf5,255,"ch:%d state:%d mod:%04x scode:%02x char: %lc uc:%04x",key->channel, key->state, key->modifier, key->scancode, key->UTF16, key->UTF16);
 		plog(buf5);
 	}
 }
